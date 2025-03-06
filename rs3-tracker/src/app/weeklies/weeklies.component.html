@@ -1,0 +1,19 @@
+Weeklies <br />
+<!-- countdown to reset -->
+Next reset {{ formattedTimeLeft }}
+
+<!-- clear completions on reset -->
+<!-- ability to add custom tasks -->
+<!-- row of configured tasks -->
+
+@if(activeWeeklies.length > 0) {
+<div>
+  @for (weekly of activeWeeklies; track weekly.name) {
+  <app-task
+    [name]="weekly.name"
+    [done]="weekly.done"
+    [image]="weekly.image"
+  ></app-task>
+  }
+</div>
+}

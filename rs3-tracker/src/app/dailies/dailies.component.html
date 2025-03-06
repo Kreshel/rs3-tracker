@@ -1,0 +1,19 @@
+Dailies <br />
+<!-- countdown to reset -->
+Next reset {{ formattedTimeLeft }}
+
+<!-- clear completions on reset -->
+<!-- ability to add custom tasks -->
+<!-- row of configured tasks -->
+
+@if(activeDailies.length > 0) {
+<div>
+  @for (daily of activeDailies; track daily.name) {
+  <app-task
+    [name]="daily.name"
+    [done]="daily.done"
+    [image]="daily.image"
+  ></app-task>
+  }
+</div>
+}

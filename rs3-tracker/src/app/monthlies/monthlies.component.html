@@ -1,0 +1,19 @@
+Monthlies <br />
+<!-- countdown to reset -->
+Next reset {{ formattedTimeLeft }}
+
+<!-- clear completions on reset -->
+<!-- ability to add custom tasks -->
+<!-- row of configured tasks -->
+
+@if(activeMonthlies.length > 0) {
+<div>
+  @for (monthly of activeMonthlies; track monthly.name) {
+  <app-task
+    [name]="monthly.name"
+    [done]="monthly.done"
+    [image]="monthly.image"
+  ></app-task>
+  }
+</div>
+}
