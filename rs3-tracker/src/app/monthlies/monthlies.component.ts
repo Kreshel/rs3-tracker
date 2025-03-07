@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Task, TaskComponent } from '../task/task.component';
-import { endOfMonth, formatDistanceStrict } from 'date-fns';
+import { endOfMonth, formatDistanceToNowStrict } from 'date-fns';
+import { HelperService } from '../helper.service';
+import { DatePipe } from '@angular/common';
 
 export const sampleWeeklies: Task[] = [
   {
@@ -14,25 +16,22 @@ export const sampleWeeklies: Task[] = [
 
 @Component({
   selector: 'app-monthlies',
-  imports: [TaskComponent],
+  imports: [TaskComponent, DatePipe],
   templateUrl: './monthlies.component.html',
   styleUrl: './monthlies.component.scss',
 })
 export class MonthliesComponent {
-  nowDatetime: Date;
   resetDatetime: Date;
   formattedTimeLeft: string;
-  activeMonthlies: Task[] = sampleWeeklies; //pipe out non-active
+  activeMonthlies: Task[] = sampleWeeklies.filter((task) => task.enabled);
 
-  constructor() {
-    this.nowDatetime = new Date();
+  constructor(private helperFns: HelperService) {
+    //this.resetDatetime = this.helperFns.endOfMonthUTC();
 
     this.resetDatetime = endOfMonth(new Date());
 
-    this.formattedTimeLeft = formatDistanceStrict(
-      this.resetDatetime,
-      this.nowDatetime,
-      { addSuffix: true }
-    );
+    this.formattedTimeLeft = formatDistanceToNowStrict(this.resetDatetime, {
+      addSuffix: true,
+    });
   }
 }

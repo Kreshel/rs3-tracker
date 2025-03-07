@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Task, TaskComponent } from '../task/task.component';
-import { formatDistanceStrict } from 'date-fns';
+import { endOfDay, formatDistanceToNowStrict } from 'date-fns';
+import { UTCDate } from '@date-fns/utc';
+import { HelperService } from '../helper.service';
 
 export const sampleDailies: Task[] = [
   {
@@ -19,30 +21,15 @@ export const sampleDailies: Task[] = [
   styleUrl: './dailies.component.scss',
 })
 export class DailiesComponent {
-  nowDatetime: Date;
   resetDatetime: Date;
   formattedTimeLeft: string;
-  activeDailies: Task[] = sampleDailies;
+  activeDailies: Task[] = sampleDailies.filter((task) => task.enabled);
 
-  constructor() {
-    this.nowDatetime = new Date();
+  constructor(private helperFns: HelperService) {
+    this.resetDatetime = endOfDay(new UTCDate());
 
-    this.resetDatetime = new Date(
-      Date.UTC(
-        this.nowDatetime.getUTCFullYear(),
-        this.nowDatetime.getUTCMonth(),
-        this.nowDatetime.getUTCDate() + 1, // Move to next day
-        0,
-        0,
-        0,
-        0 // Set to 00:00:00 UTC
-      )
-    );
-
-    this.formattedTimeLeft = formatDistanceStrict(
-      this.resetDatetime,
-      this.nowDatetime,
-      { addSuffix: true }
-    );
+    this.formattedTimeLeft = formatDistanceToNowStrict(this.resetDatetime, {
+      addSuffix: true,
+    });
   }
 }

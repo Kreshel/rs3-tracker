@@ -1,0 +1,50 @@
+{
+  "dailies": [
+    {
+      "name": "Guthixian Cache",
+      "image": "guthixianCache.png",
+      "done": "false",
+      "enabled": "true"
+    },
+    {
+      "name": "Reaper Task",
+      "image": "reaper.png",
+      "done": "true",
+      "enabled": "true"
+    },
+    {
+      "name": "Daily Challenges",
+      "image": "dailyChallenges.png",
+      "done": "true",
+      "enabled": "true"
+    }
+  ],
+  "weeklies": [
+    {
+      "name": "Herby Werby",
+      "image": "herbyWerby.png",
+      "done": "false",
+      "enabled": "true"
+    },
+    {
+      "name": "The Circus",
+      "image": "circus.png",
+      "done": "true",
+      "enabled": "true"
+    }
+  ],
+  "monthlies": [
+    {
+      "name": "Troll Invasion",
+      "image": "trollInvasion.png",
+      "done": "false",
+      "enabled": "true"
+    },
+    {
+      "name": "Giant Oyster",
+      "image": "giantOyster.png",
+      "done": "true",
+      "enabled": "true"
+    }
+  ]
+}
