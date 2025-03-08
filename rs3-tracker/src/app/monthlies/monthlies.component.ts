@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Task, TaskComponent } from '../task/task.component';
 import { endOfMonth, formatDistanceToNowStrict } from 'date-fns';
-import { HelperService } from '../helper.service';
 import { DatePipe } from '@angular/common';
+import { UTCDate } from '@date-fns/utc';
 
 export const sampleWeeklies: Task[] = [
   {
@@ -25,10 +25,8 @@ export class MonthliesComponent {
   formattedTimeLeft: string;
   activeMonthlies: Task[] = sampleWeeklies.filter((task) => task.enabled);
 
-  constructor(private helperFns: HelperService) {
-    //this.resetDatetime = this.helperFns.endOfMonthUTC();
-
-    this.resetDatetime = endOfMonth(new Date());
+  constructor() {
+    this.resetDatetime = endOfMonth(new UTCDate());
 
     this.formattedTimeLeft = formatDistanceToNowStrict(this.resetDatetime, {
       addSuffix: true,

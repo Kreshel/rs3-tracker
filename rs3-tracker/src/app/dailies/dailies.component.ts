@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Task, TaskComponent } from '../task/task.component';
-import { endOfDay, formatDistanceToNowStrict } from 'date-fns';
+import { add, endOfDay, formatDistanceToNowStrict } from 'date-fns';
 import { UTCDate } from '@date-fns/utc';
-import { HelperService } from '../helper.service';
+import { DatePipe } from '@angular/common';
+import { interval, Subscription } from 'rxjs';
 
 export const sampleDailies: Task[] = [
   {
@@ -16,20 +17,29 @@ export const sampleDailies: Task[] = [
 
 @Component({
   selector: 'app-dailies',
-  imports: [TaskComponent],
+  imports: [TaskComponent, DatePipe],
   templateUrl: './dailies.component.html',
   styleUrl: './dailies.component.scss',
 })
-export class DailiesComponent {
-  resetDatetime: Date;
-  formattedTimeLeft: string;
+export class DailiesComponent implements OnInit, OnDestroy {
+  resetDatetime: Date = endOfDay(new UTCDate());
+  formattedTimeLeft?: string;
   activeDailies: Task[] = sampleDailies.filter((task) => task.enabled);
+  wowzaSubscription?: Subscription;
 
-  constructor(private helperFns: HelperService) {
-    this.resetDatetime = endOfDay(new UTCDate());
+  constructor() {}
 
-    this.formattedTimeLeft = formatDistanceToNowStrict(this.resetDatetime, {
-      addSuffix: true,
+  ngOnInit() {
+    this.wowzaSubscription = interval(1000).subscribe(() => {
+      this.formattedTimeLeft = formatDistanceToNowStrict(this.resetDatetime, {
+        addSuffix: true,
+      });
     });
+  }
+
+  // on reset this has to change
+
+  ngOnDestroy() {
+    this.wowzaSubscription?.unsubscribe();
   }
 }
