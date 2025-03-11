@@ -7,14 +7,18 @@ reset: {{ resetDatetime | date : "full" }}
 <!-- ability to add custom tasks -->
 <!-- row of configured tasks -->
 
-@if(activeDailies.length > 0) {
+<!-- Standard -->
+@if(dailies() && dailies().length > 0) {
 <div>
-  @for (daily of activeDailies; track daily.name) {
+  @for (daily of dailies(); track daily.name) {
   <app-task
     [name]="daily.name"
-    [done]="daily.done"
+    [done]="doneDailies().indexOf(daily.name) > -1"
     [image]="daily.image"
+    [editable]="editable"
   ></app-task>
   }
 </div>
 }
+
+<!-- Edit -->

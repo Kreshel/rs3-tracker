@@ -1,3 +1,8 @@
-<app-dailies></app-dailies> <br /><br /><br />
+<app-dailies
+  [dailies]="(enabledTasks$ | async)!"
+  [doneDailies]="(doneTasks$ | async)!"
+></app-dailies>
+<br /><br /><br />
 <app-weeklies></app-weeklies> <br /><br /><br />
-<app-monthlies></app-monthlies>
+<app-monthlies></app-monthlies><br /><br /><br />
+export/import

@@ -1,19 +1,22 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Task, TaskComponent } from '../task/task.component';
-import { add, endOfDay, formatDistanceToNowStrict } from 'date-fns';
+import { Component, input, OnDestroy, OnInit } from '@angular/core';
+import { TaskComponent } from '../task/task.component';
+import { add, endOfDay, formatDistanceToNowStrict, isPast } from 'date-fns';
 import { UTCDate } from '@date-fns/utc';
 import { DatePipe } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Task } from '../task/task.model';
+import { DoneTasksActions, EnabledTasksActions } from '../state/tasks.actions';
 
-export const sampleDailies: Task[] = [
-  {
-    name: 'Guthixian Cache',
-    image: 'guthixianCache.png',
-    done: false,
-    enabled: true,
-  },
-  { name: 'Reaper Task', image: 'reaper.png', done: true, enabled: true },
-];
+// export const sampleDailies: Task[] = [
+//   {
+//     name: 'Guthixian Cache',
+//     image: 'guthixianCache.png',
+//     done: false,
+//     enabled: true,
+//   },
+//   { name: 'Reaper Task', image: 'reaper.png', done: true, enabled: true },
+// ];
 
 @Component({
   selector: 'app-dailies',
@@ -22,24 +25,55 @@ export const sampleDailies: Task[] = [
   styleUrl: './dailies.component.scss',
 })
 export class DailiesComponent implements OnInit, OnDestroy {
-  resetDatetime: Date = endOfDay(new UTCDate());
+  resetDatetime: Date;
   formattedTimeLeft?: string;
-  activeDailies: Task[] = sampleDailies.filter((task) => task.enabled);
-  wowzaSubscription?: Subscription;
+  timeLeftSubscription?: Subscription;
 
-  constructor() {}
+  readonly dailies = input.required<Task[]>();
+  readonly doneDailies = input.required<string[]>();
+  editable: boolean = false;
+
+  constructor(private store: Store) {
+    this.resetDatetime = endOfDay(new UTCDate());
+  }
 
   ngOnInit() {
-    this.wowzaSubscription = interval(1000).subscribe(() => {
+    console.log('dailies', this.dailies());
+    console.log('done dailies', this.doneDailies());
+    // debug:
+    this.resetDatetime = new Date();
+    this.resetDatetime = add(this.resetDatetime, { seconds: 10 });
+
+    this.timeLeftSubscription = interval(1000).subscribe(() => {
+      // TODO: maybe turn this into an effect
+      if (isPast(this.resetDatetime)) {
+        this.store.dispatch(DoneTasksActions.resetTasks());
+        this.resetDatetime = endOfDay(new UTCDate());
+      }
+
       this.formattedTimeLeft = formatDistanceToNowStrict(this.resetDatetime, {
         addSuffix: true,
       });
     });
   }
 
-  // on reset this has to change
-
   ngOnDestroy() {
-    this.wowzaSubscription?.unsubscribe();
+    this.timeLeftSubscription?.unsubscribe();
+  }
+
+  onCheckDone(taskName: string) {
+    this.store.dispatch(DoneTasksActions.addTask({ taskName }));
+  }
+
+  onCheckNotDone(taskName: string) {
+    this.store.dispatch(DoneTasksActions.removeTask({ taskName }));
+  }
+
+  onEnable(taskName: string) {
+    this.store.dispatch(EnabledTasksActions.addTask({ taskName }));
+  }
+
+  onDisable(taskName: string) {
+    this.store.dispatch(EnabledTasksActions.removeTask({ taskName }));
   }
 }

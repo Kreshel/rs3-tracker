@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { Task, TaskComponent } from '../task/task.component';
+import { TaskComponent } from '../task/task.component';
 import { endOfMonth, formatDistanceToNowStrict } from 'date-fns';
 import { DatePipe } from '@angular/common';
 import { UTCDate } from '@date-fns/utc';
+import { Task } from '../task/task.model';
 
-export const sampleWeeklies: Task[] = [
+export const sampleMonthlies: any[] = [
   {
     name: 'Troll Invasion',
     image: 'trollInvasion.png',
@@ -23,7 +24,7 @@ export const sampleWeeklies: Task[] = [
 export class MonthliesComponent {
   resetDatetime: Date;
   formattedTimeLeft: string;
-  activeMonthlies: Task[] = sampleWeeklies.filter((task) => task.enabled);
+  activeMonthlies: any[] = sampleMonthlies.filter((task) => task.enabled);
 
   constructor() {
     this.resetDatetime = endOfMonth(new UTCDate());
